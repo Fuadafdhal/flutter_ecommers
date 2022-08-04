@@ -7,6 +7,22 @@ class Cart extends Equatable {
 
   const Cart({this.products = const <Product>[]});
 
+  @override
+  List<Object?> get props => [products];
+
+  Map productQuntity(product) {
+    var quntity = Map();
+
+    products.forEach((product) {
+      if (!quntity.containsKey(product)) {
+        quntity[product] = 1;
+      } else {
+        quntity[product] += 1;
+      }
+    });
+    return quntity;
+  }
+
   double get subtotal =>
       products.fold(0, (total, current) => total + current.price);
 
@@ -31,7 +47,4 @@ class Cart extends Equatable {
   String get deliveryFeeString => deliveryFee(subtotal).toStringAsFixed(2);
 
   String get freeDeliveryString => freeDelivery(subtotal);
-
-  @override
-  List<Object?> get props => [products];
 }

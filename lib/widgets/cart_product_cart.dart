@@ -6,9 +6,11 @@ import '../models/models.dart';
 
 class CartProductCart extends StatelessWidget {
   final Product product;
+  final int quantity;
   const CartProductCart({
     Key? key,
     required this.product,
+    required this.quantity,
   }) : super(key: key);
 
   @override
@@ -51,8 +53,8 @@ class CartProductCart extends StatelessWidget {
                     icon: Icon(Icons.remove_circle),
                   ),
                   Text(
-                    '1',
-                    style: Theme.of(context).textTheme.headline5,
+                    '$quantity',
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                   IconButton(
                     onPressed: () {
