@@ -1,12 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/blocs/cart/cart_bloc.dart';
+import 'package:flutter_ecommerce/blocs/category/category_bloc.dart';
+import 'package:flutter_ecommerce/blocs/product/product_bloc.dart';
 import 'package:flutter_ecommerce/blocs/wishlist/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/config/app_router.dart';
+import 'package:flutter_ecommerce/repositories/category/category_repository.dart';
+import 'package:flutter_ecommerce/repositories/product/product_repository.dart';
 import 'package:flutter_ecommerce/screens/screens.dart';
 import 'config/theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -19,6 +27,14 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => WishlistBloc()..add(StartWishlist())),
         BlocProvider(create: (_) => CartBloc()..add(CartStarted())),
+        BlocProvider(
+          create: (_) => CategoryBloc(categoryRepository: CategoryRepository())
+            ..add(LoadCategories()),
+        ),
+        BlocProvider(
+          create: (_) => ProductBloc(productRepository: ProductRepository())
+            ..add(LoadProducts()),
+        ),
       ],
       child: MaterialApp(
         title: 'Zero To Unicorn',

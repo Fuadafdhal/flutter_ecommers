@@ -19,42 +19,42 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
       yield* _mapRemoveWishlistProductToState(event, state);
     }
   }
-}
 
-Stream<WishlistState> _mapStartWishlistToState() async* {
-  yield WishlistLoading();
-  try {
-    await Future<void>.delayed(Duration(seconds: 1));
-    yield WishlistLoaded();
-  } catch (_) {}
-}
-
-Stream<WishlistState> _mapAddWishlistProductToState(
-  AddProductToWishlist event,
-  WishlistState state,
-) async* {
-  if (state is WishlistLoaded) {
+  Stream<WishlistState> _mapStartWishlistToState() async* {
+    yield WishlistLoading();
     try {
-      yield WishlistLoaded(
-        wishlist: Wishlist(
-          products: List.from(state.wishlist.products)..add(event.product),
-        ),
-      );
+      await Future<void>.delayed(Duration(seconds: 1));
+      yield WishlistLoaded();
     } catch (_) {}
   }
-}
 
-Stream<WishlistState> _mapRemoveWishlistProductToState(
-  RemoveProductFromWishlist event,
-  WishlistState state,
-) async* {
-  if (state is WishlistLoaded) {
-    try {
-      yield WishlistLoaded(
-        wishlist: Wishlist(
-          products: List.from(state.wishlist.products)..remove(event.product),
-        ),
-      );
-    } catch (_) {}
+  Stream<WishlistState> _mapAddWishlistProductToState(
+    AddProductToWishlist event,
+    WishlistState state,
+  ) async* {
+    if (state is WishlistLoaded) {
+      try {
+        yield WishlistLoaded(
+          wishlist: Wishlist(
+            products: List.from(state.wishlist.products)..add(event.product),
+          ),
+        );
+      } catch (_) {}
+    }
+  }
+
+  Stream<WishlistState> _mapRemoveWishlistProductToState(
+    RemoveProductFromWishlist event,
+    WishlistState state,
+  ) async* {
+    if (state is WishlistLoaded) {
+      try {
+        yield WishlistLoaded(
+          wishlist: Wishlist(
+            products: List.from(state.wishlist.products)..remove(event.product),
+          ),
+        );
+      } catch (_) {}
+    }
   }
 }
