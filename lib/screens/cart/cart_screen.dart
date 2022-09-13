@@ -18,25 +18,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Cart'),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        child: Container(
-          height: 56,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.white),
-                onPressed: () {},
-                child: Text(
-                  'GO TO CHECKOUT',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomNavBar(screen: routeName),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoading) {
@@ -79,7 +61,7 @@ class CartScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       SizedBox(
-                        height: 390,
+                        height: 370,
                         child: ListView.builder(
                           itemCount: state.cart
                               .productQuntity(state.cart.products)

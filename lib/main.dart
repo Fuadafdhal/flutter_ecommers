@@ -14,7 +14,6 @@ import 'config/theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(const MyApp());
 }
 
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
         title: 'Zero To Unicorn',
         theme: theme(),
         onGenerateRoute: AppRouter.onGenerateRoute,
-        initialRoute: SplashScreen.routeName,
+        initialRoute: CheckoutScreen.routeName,
       ),
     );
   }

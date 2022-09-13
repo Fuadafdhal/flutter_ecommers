@@ -1,8 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ecommerce/blocs/wishlist/wishlist_bloc.dart';
-import '../../blocs/cart/cart_bloc.dart';
 import '../../models/models.dart';
 import '../../widgets/widgets.dart';
 
@@ -23,59 +20,7 @@ class ProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: product.name),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        child: Container(
-          height: 56,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.share,
-                  color: Colors.white,
-                ),
-              ),
-              BlocBuilder<WishlistBloc, WishlistState>(
-                builder: (context, state) {
-                  return IconButton(
-                    onPressed: () {
-                      context
-                          .read<WishlistBloc>()
-                          .add(AddProductToWishlist(product));
-
-                      final snackBar = SnackBar(
-                        content: Text('Added to your Wishlist!'),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    },
-                    icon: Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                    ),
-                  );
-                },
-              ),
-              BlocBuilder<CartBloc, CartState>(
-                builder: (context, state) {
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                    onPressed: () {
-                      context.read<CartBloc>().add(CartProductAdded(product));
-                      Navigator.pushNamed(context, '/cart');
-                    },
-                    child: Text(
-                      'ADD TO CART',
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomNavBar(screen: routeName, product: product),
       body: ListView(
         children: [
           CarouselSlider(
