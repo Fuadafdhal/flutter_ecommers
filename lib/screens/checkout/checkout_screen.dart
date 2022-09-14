@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/checkout/checkout_bloc.dart';
 import '/widgets/widgets.dart';
 
 class CheckoutScreen extends StatelessWidget {
@@ -16,41 +18,69 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailControler = TextEditingController();
-    final TextEditingController nameControler = TextEditingController();
-    final TextEditingController addressControler = TextEditingController();
-    final TextEditingController cityControler = TextEditingController();
-    final TextEditingController countryControler = TextEditingController();
-    final TextEditingController zipCodeControler = TextEditingController();
     return Scaffold(
       appBar: CustomAppBar(title: 'Checkout'),
       bottomNavigationBar: const CustomNavBar(screen: routeName),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'CUSTOMER INDFORMATION',
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            _buildTextFormField(context, emailControler, 'Email'),
-            _buildTextFormField(context, nameControler, 'Full Name'),
-            Text(
-              'DELIVERY INDFORMATION',
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            _buildTextFormField(context, addressControler, 'Address'),
-            _buildTextFormField(context, cityControler, 'City'),
-            _buildTextFormField(context, countryControler, 'Country'),
-            _buildTextFormField(context, zipCodeControler, 'Zip Code'),
-            Text(
-              'ORDER INDFORMATION',
-              style: Theme.of(context).textTheme.headline3,
-            ),
-            OrderSummary(),
-          ],
+        child: BlocBuilder<CheckoutBloc, CheckoutState>(
+          builder: (context, state) {
+            if (state is CheckoutLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is CheckoutLoaded) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'CUSTOMER INDFORMATION',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  _buildTextFormField(context, (value) {
+                    context
+                        .read<CheckoutBloc>()
+                        .add(UpdateCheckout(email: value));
+                  }, 'Email'),
+                  _buildTextFormField(context, (value) {
+                    context
+                        .read<CheckoutBloc>()
+                        .add(UpdateCheckout(fullName: value));
+                  }, 'Full Name'),
+                  Text(
+                    'DELIVERY INDFORMATION',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  _buildTextFormField(context, (value) {
+                    context
+                        .read<CheckoutBloc>()
+                        .add(UpdateCheckout(address: value));
+                  }, 'Address'),
+                  _buildTextFormField(context, (value) {
+                    context
+                        .read<CheckoutBloc>()
+                        .add(UpdateCheckout(city: value));
+                  }, 'City'),
+                  _buildTextFormField(context, (value) {
+                    context
+                        .read<CheckoutBloc>()
+                        .add(UpdateCheckout(country: value));
+                  }, 'Country'),
+                  _buildTextFormField(context, (value) {
+                    context
+                        .read<CheckoutBloc>()
+                        .add(UpdateCheckout(zipCode: value));
+                  }, 'Zip Code'),
+                  Text(
+                    'ORDER INDFORMATION',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  OrderSummary(),
+                ],
+              );
+            } else {
+              return Text('Something went wrong.');
+            }
+          },
         ),
       ),
     );
@@ -58,7 +88,7 @@ class CheckoutScreen extends StatelessWidget {
 
   Padding _buildTextFormField(
     BuildContext context,
-    TextEditingController controller,
+    Function(String)? onChenged,
     String labelText,
   ) {
     return Padding(
@@ -74,7 +104,7 @@ class CheckoutScreen extends StatelessWidget {
           ),
           Expanded(
             child: TextFormField(
-              controller: controller,
+              onChanged: onChenged,
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.only(left: 4),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/cart/cart_bloc.dart';
+import '../blocs/checkout/checkout_bloc.dart';
 import '../blocs/wishlist/wishlist_bloc.dart';
 import '../models/models.dart';
 
@@ -144,16 +145,30 @@ class CustomNavBar extends StatelessWidget {
 
   List<Widget> _buildOrderNowNavBar(context) {
     return [
-      ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          primary: Colors.white,
-          shape: RoundedRectangleBorder(),
-        ),
-        child: Text(
-          'ORDER NOW',
-          style: Theme.of(context).textTheme.headline3,
-        ),
+      BlocBuilder<CheckoutBloc, CheckoutState>(
+        builder: (context, state) {
+          if (state is CheckoutLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is CheckoutLoaded) {
+            return ElevatedButton(
+              onPressed: () {
+                context
+                    .read<CheckoutBloc>()
+                    .add(ConfirmCheckout(checkout: state.checkout));
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                shape: RoundedRectangleBorder(),
+              ),
+              child: Text(
+                'ORDER NOW',
+                style: Theme.of(context).textTheme.headline3,
+              ),
+            );
+          } else {
+            return Text('Something went wrong.');
+          }
+        },
       )
     ];
   }

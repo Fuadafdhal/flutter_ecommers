@@ -11,7 +11,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   Stream<WishlistState> mapEventToState(
     WishlistEvent event,
   ) async* {
-    if (event is StartWishlist) {
+    if (event is WishlistStarted) {
       yield* _mapStartWishlistToState();
     } else if (event is AddProductToWishlist) {
       yield* _mapAddWishlistProductToState(event, state);
